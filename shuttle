@@ -1,0 +1,147 @@
+#!/usr/bin/env python
+import sys
+import os
+from os.path import expanduser
+import gtk
+import appindicator
+
+class Shuttle:
+    """
+    Shuttle For Ubuntu.
+    Shuttle For Ubuntu is an appindicator plugin to allow
+    quick SSH into hosts configured in ~/.ssh/config through
+    gnome-terminal
+    
+    For more info, visit the Github page.
+
+    This class is whole-and-soul of the Shuttle For Ubuntu app!
+    """
+
+    ABOUT_PAGE = "http://www.github.com/"
+    SSH_CONFIG_FILE_PATH = expanduser("~") + "/.ssh/config"
+    ROOT_GROUP = "Root"
+    REFRESH_INTERVAL = 120 # secs
+    TERMINAL = "gnome-terminal"
+    SHUTTLE_GROUP_COMMENT = "#Shuttle Group"
+    VERSION = "0.1"
+
+    def __init__(self):
+        self.appindicator = appindicator.Indicator("shuttle-for-ubuntu",
+                                                   "no-icon",
+                                                   appindicator.CATEGORY_OTHER)
+        self.appindicator.set_status(appindicator.STATUS_ACTIVE)
+        self.appindicator.set_label("SSH")
+        self.menu = gtk.Menu()
+        self.appindicator.set_menu(self.menu)
+        self.ssh_config_groups = {}
+
+    def handle_quit(self, widget):
+        """
+        Exit the appindicator
+        """
+        sys.exit(0)
+
+    def run(self):
+        """
+        Run the appindicator
+        """
+        self.refresh()
+        gtk.main()
+
+    def refresh(self):
+        """
+        Load the ssh config file and parse the Shuttle comments
+        Populate the SSH menu and keep polling for updates
+        """
+        self.ssh_config_groups.clear()
+        for i in self.menu.get_children():
+            self.menu.remove(i)
+        self.load_ssh_config()
+        self.populate_menu()
+        gtk.timeout_add(Shuttle.REFRESH_INTERVAL * 1000, self.refresh)
+
+    def add_menu_item(self, name, handler, context_data = None, sub_menu = None):
+        """
+        Add a menu item to SSH
+        context_data is appended to the menuItem added
+        sub_menu is the menu to which the item will be appended
+        """
+        menu_item = gtk.MenuItem(name)
+        menu_item.connect("activate", handler)
+        menu_item.context_data = context_data
+        menu_item.show()
+        if sub_menu:
+            sub_menu.append(menu_item)
+        else:
+            self.menu.append(menu_item)
+        
+    def add_sub_menu(self, name):
+        """
+        Create a sub menu, add it to the root menu and return it
+        """
+        menu_item = gtk.MenuItem(name)
+        menu_item.show()
+        sub_menu = gtk.Menu()
+        menu_item.set_submenu(sub_menu)
+        self.menu.append(menu_item)
+        return sub_menu
+
+    def populate_menu(self):
+        """
+        Populate the main SSH menu
+        """
+        for group in self.ssh_config_groups:
+            sub_menu = None
+            if group is not Shuttle.ROOT_GROUP:
+                sub_menu = self.add_sub_menu(group)
+            sorted_groups = sorted(self.ssh_config_groups[group], key = lambda x : x[0])
+            for title,host in sorted_groups:
+                self.add_menu_item(title, self.open_terminal_ssh, host, sub_menu)
+
+        # Add a separator
+        separator = gtk.SeparatorMenuItem()
+        separator.show()
+        self.menu.append(separator)
+        # Populate Open Terminal, About and Quit
+        self.add_menu_item("Open Terminal", self.open_terminal)
+        self.add_menu_item("About", self.handle_about)
+        self.add_menu_item("Quit", self.handle_quit)
+
+    def load_ssh_config(self):
+        """
+        Load the SSH config file
+        Parse the #Shuttle comments to group the hosts
+        """
+        ssh_config_file = open(Shuttle.SSH_CONFIG_FILE_PATH, 'r')
+        group = Shuttle.ROOT_GROUP
+        title = ""
+        for line in ssh_config_file:
+            line = line.strip()
+            if line.startswith("Host "):
+                if not group in self.ssh_config_groups:
+                    self.ssh_config_groups[group] = []
+                if not title:
+                    title = line[5:].strip()
+                self.ssh_config_groups[group].append((title, line[5:]))
+                group = Shuttle.ROOT_GROUP
+                title = ""
+            elif line.startswith(Shuttle.SHUTTLE_GROUP_COMMENT):
+                path = line[14:].strip()
+                if path.count('/'):
+                    group = path[:path.find('/')]
+                    title = path[path.find('/')+1:]
+                else:
+                    group = path
+
+    def open_terminal(self, widget):
+        os.system(Shuttle.TERMINAL)
+
+    def open_terminal_ssh(self, widget):
+        os.system("{0} -e 'ssh {1}'".format(Shuttle.TERMINAL, widget.context_data))
+
+    def handle_about(self, widget):
+        gtk.show_uri(None, "http://github.com", gtk.gdk.CURRENT_TIME)
+
+if __name__ == "__main__":
+    shuttle = Shuttle()
+    sys.exit(shuttle.run())
