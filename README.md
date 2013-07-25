@@ -8,14 +8,15 @@ Refer to the Github Page to see what it looks like.
 
 Installing Shuttle
 ==================
-Installing Shuttle is easy, execute the following commandsin order:
+Installing Shuttle is easy, fire up your terminal, and execute the following commands in order:
 
-```mv shuttle.py /etc/init.d/```
-
-```sudo chmod +x /etc/init.d/shuttle.py ```
-
-```sudo update-rc.d shuttle.py defaults```
-
+```Shell
+sudo wget --no-check-certificate https://raw.github.com/ashisha/shuttle/master/shuttle -O /usr/bin/shuttle
+sudo chmod +x /usr/bin/shuttle
+mkdir -p ~/.config/autostart
+sudo wget --no-check-certificate https://github.com/ashisha/shuttle/raw/master/shuttle.desktop -O ~/.config/autostart/shuttle.desktop
+nohup shuttle >/dev/null &
+```
 
 
 Configuring Shuttle
@@ -35,4 +36,4 @@ Configuring Shuttle
     Host pdc2
     Hostname 1.2.3.5
 ```
-
+* Refer the Github page for a WYSIWYG perspective
