@@ -23,8 +23,10 @@ Configuring Shuttle
 ===================
 * Shuttle needs no configuration to run as such
 * All the hosts listed in your *~/.ssh/config* will be automatically picked by Shuttle
-* To prettify, create groups of your hosts by adding comments to your ssh config file as:
+* To prettify, **create groups** of your hosts by adding comments to your ssh config file as:
       ```#Shuttle Group <group>/<host description>```
+* You can also ignore certain Host entries so as they do not appear in the Shuttle by adding an ignore comment as:
+      ```#Shuttle Ignore```
 * An example ssh config file may look like:
 
 ```Shell
@@ -35,5 +37,9 @@ Configuring Shuttle
     #Shuttle Group WithoutGroup
     Host pdc2
     Hostname 1.2.3.5
+    
+    #Shuttle Ignore
+    Host xlabs
+    Hostname supersecret.example.com
 ```
 * Refer the [Github page](http://ashisha.github.io/shuttle) for a WYSIWYG perspective
