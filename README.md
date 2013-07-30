@@ -25,7 +25,7 @@ Configuring Shuttle
 * All the hosts listed in your *~/.ssh/config* will be automatically picked by Shuttle
 * To prettify, **create groups** of your hosts by adding comments to your ssh config file as:
       ```#Shuttle Group <group>/<host description>```
-* You can also ignore certain Host entries so as they do not appear in the Shuttle by adding an ignore comment as:
+* You can also **ignore** certain Host entries so as they do not appear in the Shuttle by adding an ignore comment as:
       ```#Shuttle Ignore```
 * An example ssh config file may look like:
 
