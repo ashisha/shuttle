@@ -23,6 +23,7 @@ class Shuttle:
     REFRESH_INTERVAL = 120 # secs
     TERMINAL = "gnome-terminal"
     SHUTTLE_GROUP_COMMENT = "#Shuttle Group"
+    SHUTTLE_IGNORE_COMMENT = "#Shuttle Ignore"
     VERSION = "0.1"
 
     def __init__(self):
@@ -115,9 +116,13 @@ class Shuttle:
         ssh_config_file = open(Shuttle.SSH_CONFIG_FILE_PATH, 'r')
         group = Shuttle.ROOT_GROUP
         title = ""
+        ignoreEntry = False
         for line in ssh_config_file:
             line = line.strip()
             if line.startswith("Host "):
+                if ignoreEntry:
+                    ignoreEntry = False
+                    continue
                 if not group in self.ssh_config_groups:
                     self.ssh_config_groups[group] = []
                 if not title:
@@ -132,6 +137,8 @@ class Shuttle:
                     title = path[path.find('/')+1:]
                 else:
                     group = path
+            elif line.startswith(Shuttle.SHUTTLE_IGNORE_COMMENT):
+                ignoreEntry = True
 
     def open_terminal(self, widget):
         os.system(Shuttle.TERMINAL)
