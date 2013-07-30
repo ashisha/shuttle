@@ -3,7 +3,7 @@ Shuttle
 
 Shuttle For Ubuntu is super simple & quick way to SSH into hosts defined in your *~/.ssh/config* file, without coming into your way. You can still enjoy the command line pleasure that comes with ssh-config.
 
-Refer to the Github Page to see what it looks like.
+Refer to the [Github page](http://ashisha.github.io/shuttle) to see what it looks like
 
 
 Installing Shuttle
@@ -36,4 +36,4 @@ Configuring Shuttle
     Host pdc2
     Hostname 1.2.3.5
 ```
-* Refer the Github page for a WYSIWYG perspective
+* Refer the [Github page](http://ashisha.github.io/shuttle) for a WYSIWYG perspective
