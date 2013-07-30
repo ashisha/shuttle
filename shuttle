@@ -17,7 +17,7 @@ class Shuttle:
     This class is whole-and-soul of the Shuttle For Ubuntu app!
     """
 
-    ABOUT_PAGE = "http://www.github.com/"
+    ABOUT_PAGE = "http://ashisha.github.io/shuttle/"
     SSH_CONFIG_FILE_PATH = expanduser("~") + "/.ssh/config"
     ROOT_GROUP = "Root"
     REFRESH_INTERVAL = 120 # secs
@@ -140,7 +140,7 @@ class Shuttle:
         os.system("{0} -e 'ssh {1}'".format(Shuttle.TERMINAL, widget.context_data))
 
     def handle_about(self, widget):
-        gtk.show_uri(None, "http://github.com", gtk.gdk.CURRENT_TIME)
+        gtk.show_uri(None, Shuttle.ABOUT_PAGE, gtk.gdk.CURRENT_TIME)
 
 if __name__ == "__main__":
     shuttle = Shuttle()
