@@ -11,10 +11,10 @@ Installing Shuttle
 Installing Shuttle is easy, fire up your terminal, and execute the following commands in order:
 
 ```Shell
-sudo wget --no-check-certificate https://raw.github.com/ashisha/shuttle/master/shuttle -O /usr/bin/shuttle
-sudo chmod +x /usr/bin/shuttle
+sudo wget https://raw.github.com/ashisha/shuttle/master/shuttle -O /usr/local/bin/shuttle
+sudo chmod +x /usr/local/bin/shuttle
 mkdir -p ~/.config/autostart
-sudo wget --no-check-certificate https://github.com/ashisha/shuttle/raw/master/shuttle.desktop -O ~/.config/autostart/shuttle.desktop
+wget https://github.com/ashisha/shuttle/raw/master/shuttle.desktop -O ~/.config/autostart/shuttle.desktop
 nohup shuttle >/dev/null &
 ```
 
