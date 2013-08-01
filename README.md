@@ -18,6 +18,9 @@ wget https://github.com/ashisha/shuttle/raw/master/shuttle.desktop -O ~/.config/
 nohup shuttle >/dev/null &
 ```
 
+**Note:** If you face issues with `wget` due to https/certificates, use the `--no-check-certificate` switch with wget.
+This is not recommended due to security concerns, but go ahead if you know what you are doing.
+
 
 Configuring Shuttle
 ===================
